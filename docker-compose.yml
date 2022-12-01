@@ -1,0 +1,49 @@
+# VERSÃO DO COMPOSE QUE IREMOS USAR
+version: '3.9'
+
+# SERVIÇOS (CONTAINERS) QUE IREMOS CRIAR AO EXECUTAR docker-compose up
+services:
+  # NESSA SESSÃO IREMOS DEFINIR O CONTAINER DA api em express
+  api:
+    container_name: api # NOME DO CONTAINER
+    build: . # COMO ESSA SESSÃO SE REFERE A api, IREMOS FAZER O BUILD DA IMAGEM QUE DEFINIMOS NO DOCKERFILE
+    ports:
+      - 3000:3000 # REDIRECIONANDO A PORTA 3000 LOCAL PARA PORTA 3000 DO CONTAINER
+    environment: 
+      - PORT=3000
+      - SECRET_KEY=minhachavesecreta
+      - DB_USER=postgres
+      - DB_PASSWORD=1234
+      - DB_HOST=db
+      - DB=db
+      - DB_PORT=5432
+
+       # CRIANDO A VARIAVEL DE AMBIENTE PORT
+    # O depends_on DEFINE QUE A api DEVE INICIAR APENAS QUANDO O db INICIAR POR COMPLETO
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+
+  # NESSA SESSÃO IREMOS DEFINIR O CONTAINER DO DB em postgres
+  db:
+    container_name: db
+    image: postgres:latest # COMO ESSA SESSÃO SE REFERE AO db, ENTÃO PEGAMOS A IMAGEM DO POSTGRES QUE VEIO DIRETO DO DOCKERHBU
+    ports:
+      - 5431:5432 # REDIRECIONANDO A PORTA 5431 LOCAL PARA PORTA 5432 DO CONTAINER
+    # O docker VAI ENTENDER ESSAS VARIAVEIS DE AMBIENTE E CRIAR UM BANCO DE DADOS CHAMADO demo
+    # TAMBÉM VAI DEFINIR O USER fabio COM A PASSWORD 1234 PARA ACESSAR NOSSO BANCO DE DADOS
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=db
+    volumes:
+      - ./create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    # O healthcheck É RESPONSÁVEL POR VERIFICAR SE O BANCO DE DADOS ESTÁ INICIANDO COM SUCESSO
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
