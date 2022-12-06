@@ -1,6 +1,6 @@
 import { Styled } from "./styles";
 
-function TechCard({ data = {}, deleteTech, editContact }) {
+function ContactCard({ data = {}, deleteTech, editContact }) {
   return (
     <Styled>
       <div className="div1">{data.name}</div>
@@ -16,4 +16,4 @@ function TechCard({ data = {}, deleteTech, editContact }) {
   );
 }
 
-export default TechCard;
+export default ContactCard;

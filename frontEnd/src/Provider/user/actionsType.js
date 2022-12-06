@@ -5,3 +5,5 @@ export const userLogOff = "userLogOff";
 export const addContact = "addContact";
 
 export const removeContact = "removeContact";
+
+export const setName = "setName"

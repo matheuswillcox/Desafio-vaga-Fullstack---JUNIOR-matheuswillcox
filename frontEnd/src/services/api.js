@@ -20,14 +20,8 @@ const endPoints = {
   },
 };
 export const getToken = () =>
-  JSON.parse(localStorage.getItem("token")) || "";
-// export const getUserId = () =>
-//   JSON.parse(localStorage.getItem("userId")) || "";
+  JSON.parse(localStorage.getItem("token"));
 
-const configs = {
-  headers: { Authorization: `Bearer ${getToken()}` },
-};
-console.log(getToken())
 export const services = () => {
   
   return {
@@ -38,15 +32,25 @@ export const services = () => {
       getOne: () => api().get(endPoints.user.getOne()),
       createUser: (data) => api().post(endPoints.user.createUser, data),
       createContact: (data) =>
-        api().post(endPoints.user.contato.create, data, configs),
-      getContact: () =>
-        api().get(endPoints.user.contato.get, configs),
+        api().post(endPoints.user.contato.create, data, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        }),
+      getUser: () =>
+        api().get(endPoints.user.getOne, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        }),
       getUsersContacts: () =>
-        api().get(endPoints.user.contato.get, configs),
+        api().get(endPoints.user.contato.get, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }),
       updateContact: ( id, data) =>
-        api().patch(endPoints.user.contato.edit(id), data, configs),
+        api().patch(endPoints.user.contato.edit(id), data, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        }),
       deleteContact: (id) =>
-        api().delete(endPoints.user.contato.delete(id), configs)
+        api().delete(endPoints.user.contato.delete(id), {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        })
 
     },
   };

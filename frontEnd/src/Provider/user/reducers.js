@@ -1,4 +1,4 @@
-import { userSignIn, userLogOff, addContact, removeContact } from "./actionsType";
+import { userSignIn, userLogOff, addContact, removeContact, setName } from "./actionsType";
 
 const inicialState = {
   data: {
@@ -18,7 +18,8 @@ const reducerUser = (state = inicialState, action) => {
     case userSignIn:
 
       return (state = { logged: true }) ;
-
+    case setName : 
+      return ( state = { ...state, data: {...state.data , name: action.payload} })
     case userLogOff:
       return (state = { logged: false, data: inicialState });
 

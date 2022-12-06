@@ -7,11 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { logUser } from "../../Provider/user/actions";
+import { logUser, setUserName } from "../../Provider/user/actions";
+import jwt_decode from "jwt-decode";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
 
   const schema = yup.object().shape({
     email: yup
@@ -25,11 +27,11 @@ function Login() {
     services()
       .login({ email, password })
       .then((res) => {
-        localStorage.setItem("token", JSON.stringify(res.data.token));
-        //services().user.getOne();
-        //navigate(paths.home)
+        localStorage.setItem("token", JSON.stringify(res.data.token));     
+        const {name} = jwt_decode(res.data.token)
+        localStorage.setItem("name", JSON.stringify(name));
         dispatch(logUser());
-        console.log(res.data)
+  
       })
       .catch((err) => {
         toast.error("Login ou senha inválidos");

@@ -5,17 +5,43 @@ import * as yup from "yup";
 import { services } from "../../services/api";
 import { Styled } from "./styles";
 import { logOff } from "../../Provider/user/actions";
-import TechCard from "../../components/ContactCard";
+import ContactCard from "../../components/ContactCard";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes";
 import { useState, useEffect } from "react";
+
 
 function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogged = useSelector((state) => state.logged);
   const [contacts, setContacts] = useState([]);
+  const userName =  JSON.parse(localStorage.getItem("name"));
+ 
+  const fields = [
+    {
+      name: "name",
+      id: "techForm2",
+      label: "Nome",
+      placeholder: "Nome",
+      type: "text",
+    },
+    {
+      name: "email",
+      id: "techForm3",
+      label: "Email",
+      placeholder: "Email",
+      type: "text",
+    },
+    {
+      name: "telefone",
+      id: "techForm4",
+      label: "Telefone",
+      placeholder: "Telefone",
+      type: "number",
+    },
+  ];
 
   const schema = yup.object().shape({
     name: yup.string().required("Campo obrigatório"),
@@ -42,7 +68,7 @@ function Home() {
 
   const editAction = ({id, name, email, telefone }) => {
     services()
-      .user.updateContact({id, name, email, telefone })
+      .user.updateContact(id,{ name, email, telefone })
       .then((res) => {
         dispatch(closeModal());
         toast.success("Contato adicionado com sucesso!");
@@ -54,29 +80,6 @@ function Home() {
       });
   };
 
-  const fields = [
-    {
-      name: "name",
-      id: "techForm2",
-      label: "Nome",
-      placeholder: "Nome",
-      type: "text",
-    },
-    {
-      name: "email",
-      id: "techForm3",
-      label: "Email",
-      placeholder: "Email",
-      type: "text",
-    },
-    {
-      name: "telefone",
-      id: "techForm4",
-      label: "Telefone",
-      placeholder: "Telefone",
-      type: "number",
-    },
-  ];
 
   const handleModal = () => {
     dispatch(
@@ -103,7 +106,7 @@ function Home() {
           title=""
           buttonTitle="Editar Contato"
           schema={schema}
-          action={editAction}
+          action={()=>editAction()}
           fields={fields}
         />,
         []
@@ -118,13 +121,14 @@ function Home() {
     dispatch(logOff());
   }
 
+ 
   function getUserContacts() {
     services()
       .user.getUsersContacts()
       .then((res) => {
-        console.log(res.data)
         const contatos = res.data;
         setContacts(contatos);
+   
       })
       .catch((err) => toast.error("Algum erro ocorreu!"));
   }
@@ -139,16 +143,16 @@ function Home() {
       .catch((err) => toast.error("Ocorreu algum erro!"));
   }
 
-  function handleEditContact(id, data) {
-    handleEditModal()
-    services()
-      .user.updateContact(id, data)
-      .then((res) => {
-        toast.success("Contato editado com sucesso!");
-        getUserContacts();
-      })
-      .catch((err) => toast.error("Ocorreu algum erro!"));
-  }
+  // function handleEditContact(id, data) {
+
+  //   services()
+  //     .user.updateContact(id, data)
+  //     .then((res) => {
+  //       toast.success("Contato editado com sucesso!");
+  //       getUserContacts();
+  //     })
+  //     .catch((err) => toast.error("Ocorreu algum erro!"));
+  // }
 
   useEffect(() => {
     if (!isLogged) {
@@ -162,7 +166,7 @@ function Home() {
         <h1>Agenda</h1>
         <button onClick={handleLogoff}>Sair</button>
       </header>
-      <div className="divTop">{/* <h3>Olá, {userInfo.data.name}</h3> */}</div>
+      <div className="divTop"><h3>Olá, {userName}</h3></div>
       <div>
         <h2>Contatos</h2>
         <button className="buttonAdd" onClick={handleModal}>
@@ -171,11 +175,11 @@ function Home() {
       </div>
       <ul>
         {contacts.map((item, index) => (
-          <TechCard
+          <ContactCard
             key={index}
             data={item}
             
-            editContact={()=> handleEditContact(item.id, item.data)}
+            editContact={()=> handleEditModal(item.id, item.data)}
             deleteTech={() => handleDeleteTech(item.id)}
           />
         ))}

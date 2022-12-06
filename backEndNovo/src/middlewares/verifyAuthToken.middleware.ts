@@ -21,7 +21,8 @@ const verifyAuthTokenMiddleware = async (
     }
 
     req.userId = decoded.id;
-    req.name = decoded.name
+    req.name = decoded.name;
+
 
     return next();
   });
