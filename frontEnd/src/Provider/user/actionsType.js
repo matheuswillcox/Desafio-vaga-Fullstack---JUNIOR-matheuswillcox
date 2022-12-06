@@ -2,6 +2,6 @@ export const userSignIn = "userSignIn";
 
 export const userLogOff = "userLogOff";
 
-export const addTech = "addTech";
+export const addContact = "addContact";
 
-export const removeTech = "removeTech";
+export const removeContact = "removeContact";

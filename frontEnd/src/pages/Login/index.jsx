@@ -1,7 +1,7 @@
 import { Container } from "./styles";
 import Form from "../../components/Form";
 import * as yup from "yup";
-import { services, getUserId } from "../../services/api";
+import { services } from "../../services/api";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes";
@@ -25,13 +25,11 @@ function Login() {
     services()
       .login({ email, password })
       .then((res) => {
-        localStorage.setItem("tokenKenzieHub", JSON.stringify(res.data.token));
-        localStorage.setItem(
-          "userIdKenzieHub",
-          JSON.stringify(res.data.user.id)
-        );
-        services().user.getOne(getUserId());
-        dispatch(logUser(res.data.user));
+        localStorage.setItem("token", JSON.stringify(res.data.token));
+        //services().user.getOne();
+        //navigate(paths.home)
+        dispatch(logUser());
+        console.log(res.data)
       })
       .catch((err) => {
         toast.error("Login ou senha inválidos");

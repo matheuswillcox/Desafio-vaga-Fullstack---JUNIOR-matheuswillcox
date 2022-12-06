@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes";
 import { toast } from "react-toastify";
 
+
 function Register() {
   const navigate = useNavigate();
   const schema = yup.object().shape({
@@ -18,13 +19,14 @@ function Register() {
     password: yup.string().required("Campo obrigatório"),
     confirmPassword: yup.string().required("Campo obrigatório"),
     //bio: yup.string().required("Campo obrigatório"),
-    contact: yup.string().required("Campo obrigatório"),
+    telefone: yup.string().required("Campo obrigatório"),
     //course_module: yup.string().required("Campo obrigatório"),
   });
 
-  const action = ({ name, email, password, bio, contact, course_module }) => {
+  const action = ({ name, email, password, telefone }) => {
+
     services()
-      .user.createUser({ name, email, password, bio, contact, course_module })
+      .user.createUser({ name, email, password, telefone })
       .then((res) => {
         toast.success("Usuário Criado");
         navigate(paths.login);
@@ -67,11 +69,11 @@ function Register() {
       type: "password",
     },
     {
-      name: "contact",
+      name: "telefone",
       id: "registerForm6",
-      label: "Cotato",
-      placeholder: "Opção de contato",
-      type: "text",
+      label: "Telefone",
+      placeholder: "Numero de Telefone",
+      type: "number",
     },
   ];
 

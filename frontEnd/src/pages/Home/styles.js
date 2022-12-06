@@ -16,6 +16,12 @@ export const Styled = styled.div`
   h1 {
     color: var(--pink);
   }
+  h2{
+    color: black;
+  }
+  h3{
+    color: black;
+  }
   button {
     border: none;
     width: 55px;

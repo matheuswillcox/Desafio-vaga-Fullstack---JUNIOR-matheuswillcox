@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { services, getUserId, getToken } from "../services/api";
+import { services, getToken } from "../services/api";
 import { logUser } from "../Provider/user/actions";
 
 export const paths = {
@@ -22,11 +22,11 @@ export function Rotas() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const userId = getUserId();
+
     const token = getToken();
-    if (userId && token && !logged) {
+    if ( token && logged) {
       services()
-        .user.getOne(userId)
+      
         .then((res) => dispatch(logUser(res.data)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

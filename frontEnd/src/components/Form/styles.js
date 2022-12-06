@@ -4,6 +4,7 @@ export const Styled = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
+  border-radius: 5px;
   background-color: var(--grey3);
   align-items: center;
   padding: 10px;

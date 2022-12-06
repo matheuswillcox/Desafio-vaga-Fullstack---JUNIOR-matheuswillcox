@@ -9,17 +9,17 @@ export default createGlobalStyle`
     } 
     :root{
         --white: #f5f5f5;
-        --pink50:  #FF427F;;
+        --pink50:  #9270ff;;
         --black: #000000;
-        --pink: #FF577F;
+        --pink: #9270ff;
         --grey: #868E96;
         --grey0: #F8F9FA;
         --grey2: #343B41;
         --grey3: #212529;
     }
     body {
-        background: var(--black);
-       
+   
+       background: lightcyan;
  
     }
     body, button {

@@ -1,61 +1,53 @@
+
 import axios from "axios";
 
 const api = () => {
-  return axios.create({ baseURL: "https://kenziehub.herokuapp.com" });
+  return axios.create({ baseURL: "http://localhost:3001" });
 };
 const endPoints = {
-  login: "/sessions",
+  login: "/login",
   user: {
     getAll: "/users",
     getAllByParams: (params) => `/users?${params}`,
-    getOne: (userId) => `/users/${userId}`,
+    getOne: () => `/users/`,
     createUser: "/users",
-    techs: {
-      create: "/users/techs",
-      mutation: (techId) => `/users/techs/${techId}`,
+    contato: {
+      create: "/contact",
+      get: "/contact",
+      delete: (userId) => `/contact/${userId}`,
+      edit: (userId) => `/contact/${userId}`
     },
-    works: {
-      create: "/users/works",
-      mutation: (workId) => `/users/works/${workId}`,
-    },
-    updateAvatar: "/users/avatar",
-    updateProfile: "/users/profile",
   },
 };
 export const getToken = () =>
-  JSON.parse(localStorage.getItem("tokenKenzieHub")) || "";
-export const getUserId = () =>
-  JSON.parse(localStorage.getItem("userIdKenzieHub")) || "";
+  JSON.parse(localStorage.getItem("token")) || "";
+// export const getUserId = () =>
+//   JSON.parse(localStorage.getItem("userId")) || "";
 
 const configs = {
   headers: { Authorization: `Bearer ${getToken()}` },
 };
-
+console.log(getToken())
 export const services = () => {
+  
   return {
+
     login: (data) => api().post(endPoints.login, data),
     user: {
-      getAll: () => api().get(endPoints.user.getAll),
-      getAllByParams: (params) =>
-        api().get(endPoints.user.getAllByParams(params)),
-      getOne: (id) => api().get(endPoints.user.getOne(id)),
+
+      getOne: () => api().get(endPoints.user.getOne()),
       createUser: (data) => api().post(endPoints.user.createUser, data),
-      createTechs: (data) =>
-        api().post(endPoints.user.techs.create, data, configs),
-      updateTechs: (data, techId) =>
-        api().put(endPoints.user.techs.mutation(techId), data, configs),
-      deleteTechs: (techId) =>
-        api().delete(endPoints.user.techs.mutation(techId), configs),
-      createWorks: (data) =>
-        api().post(endPoints.user.works.create, data, configs),
-      updateWorks: (data, workId) =>
-        api().put(endPoints.user.works.mutation(workId), data, configs),
-      deleteWorks: (workId) =>
-        api().delete(endPoints.user.works.mutation(workId), configs),
-      updateAvatar: (data) =>
-        api().patch(endPoints.user.updateAvatar, data, configs),
-      updateProfile: (data) =>
-        api().put(endPoints.user.updateProfile, data, configs),
+      createContact: (data) =>
+        api().post(endPoints.user.contato.create, data, configs),
+      getContact: () =>
+        api().get(endPoints.user.contato.get, configs),
+      getUsersContacts: () =>
+        api().get(endPoints.user.contato.get, configs),
+      updateContact: ( id, data) =>
+        api().patch(endPoints.user.contato.edit(id), data, configs),
+      deleteContact: (id) =>
+        api().delete(endPoints.user.contato.delete(id), configs)
+
     },
   };
 };

@@ -1,12 +1,12 @@
-import { userSignIn, userLogOff, addTech, removeTech } from "./actionsType";
+import { userSignIn, userLogOff, addContact, removeContact } from "./actionsType";
 
-export const logUser = (payload) => ({ type: userSignIn, payload: payload });
+export const logUser = () => ({ type: userSignIn});
 
 export const logOff = () => ({ type: userLogOff });
 
-export const userAddTech = (payload) => ({ type: addTech, payload: payload });
+export const userAddContact = (payload) => ({ type: addContact, payload: payload });
 
-export const userRemoveTech = (techId) => ({
-  type: removeTech,
-  payload: techId,
+export const userRemoveTech = (id) => ({
+  type: removeContact,
+  payload: id,
 });
