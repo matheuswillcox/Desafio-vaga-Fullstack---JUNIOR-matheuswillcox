@@ -52,10 +52,13 @@ function Home() {
     telefone: yup.string().required("Campo obrigatório"),
   });
 
-  const action = ({ name, email, telefone }) => {
-    services()
-      .user.createContact({ name, email, telefone })
-      .then((res) => {
+  const action = (id,{ name, email, telefone }) => {
+    console.log(id,name, email, telefone )
+    const request = id? services().user.createContact({ name, email, telefone }): 
+    services().user.updateContact(id,{ name, email, telefone })
+ 
+      
+      request.then((res) => {
         dispatch(closeModal());
         toast.success("Contato adicionado com sucesso!");
         getUserContacts();
@@ -66,47 +69,15 @@ function Home() {
       });
   };
 
-  const editAction = ({id, name, email, telefone }) => {
-    services()
-      .user.updateContact(id,{ name, email, telefone })
-      .then((res) => {
-        dispatch(closeModal());
-        toast.success("Contato adicionado com sucesso!");
-        getUserContacts();
-      })
-      .catch((err) => {
-        toast.error("Algum erro ocorreu!");
-        console.log(err);
-      });
-  };
-
-
-  const handleModal = () => {
+  const handleModal = (id) => {
     dispatch(
       openModal(
-        "Cadastrar Contato",
+        `${id? "Editar" : "Cadastrar" } contato`,
         <Form
           title=""
-          buttonTitle="Cadastrar Contato"
+          buttonTitle={`${id ? "Editar" : "Cadastrar" } contato`}
           schema={schema}
-          action={action}
-          fields={fields}
-        />,
-        []
-      )
-    );
-  };
-
-
-  const handleEditModal = () => {
-    dispatch(
-      openModal(
-        "Editar Contato",
-        <Form
-          title=""
-          buttonTitle="Editar Contato"
-          schema={schema}
-          action={()=>editAction()}
+          action={(data)=>action(id,data)}
           fields={fields}
         />,
         []
@@ -179,7 +150,7 @@ function Home() {
             key={index}
             data={item}
             
-            editContact={()=> handleEditModal(item.id, item.data)}
+            editContact={()=> handleModal(item.id, item.data)}
             deleteTech={() => handleDeleteTech(item.id)}
           />
         ))}
