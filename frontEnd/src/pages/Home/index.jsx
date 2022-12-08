@@ -11,14 +11,15 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../routes";
 import { useState, useEffect } from "react";
 
-
 function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogged = useSelector((state) => state.logged);
   const [contacts, setContacts] = useState([]);
-  const userName =  JSON.parse(localStorage.getItem("name"));
- 
+  const userName = JSON.parse(localStorage.getItem("name"));
+  const userId = JSON.parse(localStorage.getItem("userId"));
+
+  const fieldsDelete = [];
   const fields = [
     {
       name: "name",
@@ -43,6 +44,8 @@ function Home() {
     },
   ];
 
+  const deleteSchema = yup.object().shape({});
+
   const schema = yup.object().shape({
     name: yup.string().required("Campo obrigatório"),
     email: yup
@@ -52,13 +55,10 @@ function Home() {
     telefone: yup.string().required("Campo obrigatório"),
   });
 
-  const action = (id,{ name, email, telefone }) => {
-    console.log(id,name, email, telefone )
-    const request = id? services().user.createContact({ name, email, telefone }): 
-    services().user.updateContact(id,{ name, email, telefone })
- 
-      
-      request.then((res) => {
+  const action = ({ name, email, telefone }) => {
+    const request = services().user.createContact({ name, email, telefone });
+    request
+      .then((res) => {
         dispatch(closeModal());
         toast.success("Contato adicionado com sucesso!");
         getUserContacts();
@@ -69,16 +69,110 @@ function Home() {
       });
   };
 
-  const handleModal = (id) => {
+  const handleModal = () => {
     dispatch(
       openModal(
-        `${id? "Editar" : "Cadastrar" } contato`,
+        `Cadastrar contato`,
         <Form
           title=""
-          buttonTitle={`${id ? "Editar" : "Cadastrar" } contato`}
+          buttonTitle={`Cadastrar contato`}
           schema={schema}
-          action={(data)=>action(id,data)}
+          action={(data) => action(data)}
           fields={fields}
+        />,
+        []
+      )
+    );
+  };
+
+  const actionEditContact = (id, { name, email, telefone }) => {
+    const request = services().user.updateContact(id, {
+      name,
+      email,
+      telefone,
+    });
+    request
+      .then((res) => {
+        dispatch(closeModal());
+        toast.success("Contato editado com sucesso!");
+        getUserContacts();
+      })
+      .catch((err) => {
+        toast.error("Algum erro ocorreu!");
+        console.log(err);
+      });
+  };
+
+  const handleModalEditContact = (id) => {
+    dispatch(
+      openModal(
+        `Editar contato`,
+        <Form
+          title=""
+          buttonTitle={`Editar contato`}
+          schema={schema}
+          action={(data) => actionEditContact(id, data)}
+          fields={fields}
+        />,
+        []
+      )
+    );
+  };
+
+  const actionEditUser = (id, { name, email, telefone }) => {
+    const request = services().user.editUser({ name, email, telefone });
+    request
+      .then((res) => {
+        dispatch(closeModal());
+        toast.success("Usuário editado com sucesso!");
+        getUserContacts();
+      })
+      .catch((err) => {
+        toast.error("Algum erro ocorreu!");
+        console.log(err);
+      });
+  };
+
+  const handleEditUserModal = (userId) => {
+    dispatch(
+      openModal(
+        "Editar usuário",
+        <Form
+          title=""
+          buttonTitle={"Editar usuário"}
+          schema={schema}
+          action={(data) => actionEditUser(userId, data)}
+          fields={fields}
+        />,
+        []
+      )
+    );
+  };
+
+  const actionDeleteUser = (userId) => {
+    const request = services().user.deleteUser();
+    request
+      .then((res) => {
+        dispatch(closeModal());
+        handleLogoff();
+        toast.success("Usuário deletado com sucesso!");
+      })
+      .catch((err) => {
+        toast.error("Algum erro ocorreu!");
+        console.log(err);
+      });
+  };
+
+  const handleDeleteUserModal = (userId) => {
+    dispatch(
+      openModal(
+        "Excluir o usuário?",
+        <Form
+          fields={fieldsDelete}
+          schema={deleteSchema}
+          title=""
+          buttonTitle={"Excluir usuário"}
+          action={() => actionDeleteUser(userId)}
         />,
         []
       )
@@ -88,23 +182,20 @@ function Home() {
   function handleLogoff() {
     localStorage.clear();
     navigate(paths.login);
-
     dispatch(logOff());
   }
 
- 
   function getUserContacts() {
     services()
       .user.getUsersContacts()
       .then((res) => {
         const contatos = res.data;
         setContacts(contatos);
-   
       })
       .catch((err) => toast.error("Algum erro ocorreu!"));
   }
 
-  function handleDeleteTech(id) {
+  function handleDeleteContact(id) {
     services()
       .user.deleteContact(id)
       .then((res) => {
@@ -113,17 +204,6 @@ function Home() {
       })
       .catch((err) => toast.error("Ocorreu algum erro!"));
   }
-
-  // function handleEditContact(id, data) {
-
-  //   services()
-  //     .user.updateContact(id, data)
-  //     .then((res) => {
-  //       toast.success("Contato editado com sucesso!");
-  //       getUserContacts();
-  //     })
-  //     .catch((err) => toast.error("Ocorreu algum erro!"));
-  // }
 
   useEffect(() => {
     if (!isLogged) {
@@ -137,7 +217,25 @@ function Home() {
         <h1>Agenda</h1>
         <button onClick={handleLogoff}>Sair</button>
       </header>
-      <div className="divTop"><h3>Olá, {userName}</h3></div>
+      <div className="divTop">
+        <h3>Olá, {userName}</h3>
+        <button
+          onClick={() => {
+            handleEditUserModal(userId);
+          }}
+          style={{ color: "white", height: "40px" }}
+        >
+          Editar usuário
+        </button>
+        <button
+          onClick={() => {
+            handleDeleteUserModal(userId);
+          }}
+          style={{ color: "white", height: "40px" }}
+        >
+          Excluir usuário
+        </button>
+      </div>
       <div>
         <h2>Contatos</h2>
         <button className="buttonAdd" onClick={handleModal}>
@@ -149,9 +247,8 @@ function Home() {
           <ContactCard
             key={index}
             data={item}
-            
-            editContact={()=> handleModal(item.id, item.data)}
-            deleteTech={() => handleDeleteTech(item.id)}
+            editContact={() => handleModalEditContact(item.id, item.data)}
+            deleteContact={() => handleDeleteContact(item.id)}
           />
         ))}
       </ul>

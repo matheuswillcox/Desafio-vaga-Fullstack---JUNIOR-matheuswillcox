@@ -8,14 +8,15 @@ const endPoints = {
   login: "/login",
   user: {
     getAll: "/users",
-    getAllByParams: (params) => `/users?${params}`,
     getOne: () => `/users/`,
     createUser: "/users",
+    edit: "/users",
+    delete: "/users",
     contato: {
       create: "/contact",
       get: "/contact",
       delete: (userId) => `/contact/${userId}`,
-      edit: (userId) => `/contact/${userId}`
+      edit: (id) => `/contact/${id}`
     },
   },
 };
@@ -31,6 +32,12 @@ export const services = () => {
 
       getOne: () => api().get(endPoints.user.getOne()),
       createUser: (data) => api().post(endPoints.user.createUser, data),
+      editUser: (data) => api().patch(endPoints.user.edit, data, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      }),
+      deleteUser: () => api().delete(endPoints.user.delete, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      }),
       createContact: (data) =>
         api().post(endPoints.user.contato.create, data, {
           headers: { Authorization: `Bearer ${getToken()}` }

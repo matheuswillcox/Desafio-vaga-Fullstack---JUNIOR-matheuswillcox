@@ -1,6 +1,6 @@
 ## Name
 
-Agenda de contatos ( FRONT-END )
+Agenda de contatos ( BACK-END )
 
 ## Intro
 
@@ -18,12 +18,10 @@ yarn
 
 ```shell
 
-yarn start
+yarn dev
 
 ```
-Coloque para rodar o back-end
-
-Abra http://localhost:3000 para visualizar no browser.
+O back-end esta rodando na porta 3001
 
 
 ## Ferramentas e principais bibliotecas utilizadas

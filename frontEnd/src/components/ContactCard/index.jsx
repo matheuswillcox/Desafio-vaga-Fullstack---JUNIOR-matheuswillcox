@@ -1,15 +1,16 @@
 import { Styled } from "./styles";
 
-function ContactCard({ data = {}, deleteTech, editContact }) {
+function ContactCard({ data = {}, deleteContact, editContact }) {
   return (
     <Styled>
-      <div className="div1">{data.name}</div>
-      <div className="div2">{data.email}</div>
-      <div className="div2">{data.telefone}</div>
+      
+      <div className="div1">Nome:  {data.name}</div>
+      <div className="div2">Email:  {data.email}</div>
+      <div className="div2">Telefone:  {data.telefone}</div>
       <button style={{ marginLeft: "10px" }} onClick={editContact}>
         🔄
       </button>
-      <button style={{ marginLeft: "10px" }} onClick={deleteTech}>
+      <button style={{ marginLeft: "10px" }} onClick={deleteContact}>
         🗑️
       </button>
     </Styled>
