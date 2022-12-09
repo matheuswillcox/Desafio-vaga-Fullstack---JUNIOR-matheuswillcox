@@ -19,7 +19,7 @@ const userLoginService = async ({ email, password }: IUserLogin) => {
     throw new Error("Email ou senha inválidos");
   }
 
-  const token = Jwt.sign({ email: email, id: users.id, name: users.name }, "SECRET_KEY", {
+  const token = Jwt.sign({ email: email, id: users.id, name: users.name, created: users.created_at }, "SECRET_KEY", {
     expiresIn: "24h",
   });
 

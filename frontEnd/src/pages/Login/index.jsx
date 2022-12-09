@@ -27,8 +27,9 @@ function Login() {
       .login({ email, password })
       .then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data.token));
-        const { name, id } = jwt_decode(res.data.token);
+        const { name, id, created } = jwt_decode(res.data.token);
         localStorage.setItem("name", JSON.stringify(name));
+        localStorage.setItem("created", JSON.stringify(created));
         localStorage.setItem("userId", JSON.stringify(id));
         dispatch(logUser());
       })

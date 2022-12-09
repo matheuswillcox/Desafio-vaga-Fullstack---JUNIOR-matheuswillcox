@@ -18,6 +18,12 @@ function Home() {
   const [contacts, setContacts] = useState([]);
   const userName = JSON.parse(localStorage.getItem("name"));
   const userId = JSON.parse(localStorage.getItem("userId"));
+  const created = JSON.parse(localStorage.getItem("created"));
+
+
+  const ano = created.substring(0,4)
+  const mes = created.substring(5,7)
+  const dia = created.substring(8,10)
 
   const fieldsDelete = [];
   const fields = [
@@ -219,6 +225,7 @@ function Home() {
       </header>
       <div className="divTop">
         <h3>Olá, {userName}</h3>
+        <h3>Usuário criado em {dia}-{mes}-{ano}</h3>
         <button
           onClick={() => {
             handleEditUserModal(userId);
@@ -247,7 +254,7 @@ function Home() {
           <ContactCard
             key={index}
             data={item}
-            editContact={() => handleModalEditContact(item.id, item.data)}
+            editContact={() => handleModalEditContact(item.id)}
             deleteContact={() => handleDeleteContact(item.id)}
           />
         ))}

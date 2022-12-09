@@ -14,6 +14,20 @@ yarn
 
 ```
 
+## Criando e rodando as migrations
+
+```shell
+
+yarn typeorm migration:create src/migrations/initialMigration
+
+
+yarn typeorm migration:generate src/migrations/createTables -d src/data-source.ts
+
+
+yarn typeorm migration:run -d src/data-source.ts
+
+```
+
 ## Rodar o Projeto
 
 ```shell
@@ -23,6 +37,85 @@ yarn dev
 ```
 O back-end esta rodando na porta 3001
 
+
+## Rotas usuário
+
+`POST /users - Criação usuário`
+
+```json
+{
+	"name": "Matheus Willcox",
+	"email": "matheus@gmail.com",
+	"telefone": "22223333",
+	"password": "1234"
+}
+```
+
+`POST /login - Login`
+
+```json
+{
+	"email": "matheus@mail.com",
+	"password": "1234"
+}
+```
+
+`GET /users - Listar usuários`
+
+Necessita de Token no header da requisição.
+
+`PATCH /users Atualizar usuário`
+
+Necessita de Token no header da requisição.
+
+```json
+{
+	"name": "Marcelo Willcox"
+}
+```
+
+
+`DELETE users/ - Apagar conta`
+
+Necessita de Token no header da requisição.
+
+___
+
+## Rotas contatos
+
+`POST /contact - Criação contato`
+
+Necessita de Token no header da requisição.
+
+```json
+{
+	"name": "Maria da Silva",
+	"email": "maria@gmail.com",
+	"telefone": "22223333"
+}
+```
+
+`PATCH contact/:id - Atualizar contato`
+
+Necessita de Token no header da requisição.
+
+```json
+{
+	"name": "João da Silva"
+}
+```
+
+`GET contact - Listar contatos`
+
+Necessita de Token no header da requisição.
+
+`DELETE contact/:id - Deletar contato`
+
+Necessita de Token no header da requisição.
+
+## Tabelas e relacionamentos
+
+Temos duas tabelas, uma de usuários e outra de contatos, sendo uma relação um para any, um usuário pode ter vários contatos, mas um contato só tem um usuáio.
 
 ## Ferramentas e principais bibliotecas utilizadas
 
@@ -34,3 +127,12 @@ O back-end esta rodando na porta 3001
 - jsonwebtoken
 - CSS
 - HTML
+
+
+
+
+
+
+___
+
+

@@ -7,6 +7,7 @@ declare global{
             decoded: Partial<User>
             userId: string
             name: string
+            created: string
         }
     }
 }

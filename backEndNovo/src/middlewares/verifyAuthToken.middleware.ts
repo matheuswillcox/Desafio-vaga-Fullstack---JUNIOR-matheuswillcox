@@ -13,8 +13,6 @@ const verifyAuthTokenMiddleware = async (
   }
   token = token.split(" ")[1];
 
-  const user = jwt.decode(token);
-
   jwt.verify(token, "SECRET_KEY", (error, decoded: any) => {
     if (error) {
       return res.status(401).json({ message: "Invalid Token." });
@@ -22,7 +20,7 @@ const verifyAuthTokenMiddleware = async (
 
     req.userId = decoded.id;
     req.name = decoded.name;
-
+    req.created = decoded.created;
 
     return next();
   });
