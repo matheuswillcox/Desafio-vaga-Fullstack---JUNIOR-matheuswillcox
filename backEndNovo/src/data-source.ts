@@ -1,6 +1,5 @@
 import { DataSource } from "typeorm";
-import * as dotenv from "dotenv";
-
+require("dotenv").config();
 
 const AppDataSource =
   process.env.NODE_ENV === "test"
@@ -14,14 +13,13 @@ const AppDataSource =
         type: "postgres",
         host: "localhost",
         port: 5432,
-        username: "postgres",
-        password: "1234",
-        database: "postgres",
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB,
         synchronize: false,
         logging: true,
         entities: ["src/entities/*.ts"],
         migrations: ["src/migrations/*.ts"],
       });
-
 
 export default AppDataSource;
