@@ -14,15 +14,17 @@ yarn
 
 ```
 
-## Criando e rodando as migrations
+## Criando DB
+
+Usuário precisa criar um banco de dados
+
+## Criando .env
+
+Usuário precisa criar .env com suas informações do postgres
+
+## Rodando as migrations
 
 ```shell
-
-yarn typeorm migration:create src/migrations/initialMigration
-
-
-yarn typeorm migration:generate src/migrations/createTables -d src/data-source.ts
-
 
 yarn typeorm migration:run -d src/data-source.ts
 
